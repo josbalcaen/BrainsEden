@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\code\General\follow_enemys.js">
+    <Files>
+      <File FileName="Assets\code\General\PlayerController.cs" Line="18" Column="2" />
+      <File FileName="Assets\code\General\follow.js" Line="21" Column="3" />
+      <File FileName="Assets\code\General\follow_enemys.js" Line="17" Column="75" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
