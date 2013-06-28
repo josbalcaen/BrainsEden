@@ -18,7 +18,11 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
+<<<<<<< HEAD
 	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_0_0;UNITY_4_0;UNITY_STANDALONE_WIN;ENABLE_PROFILER;UNITY_EDITOR;UNITY_TEAM_LICENSE</DefineConstants>
+=======
+	<DefineConstants>DEBUG;TRACE;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;UNITY_ANDROID_API;ENABLE_CLOTH;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;UNITY_4_1_5;UNITY_4_1;ENABLE_PROFILER;UNITY_EDITOR</DefineConstants>
+>>>>>>> e63d42af87d9d3ba84e0da011b7523732bbe300c
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -47,7 +51,6 @@
      <Compile Include="Assets\code\Camera Scripts\MouseOrbit.js" />
      <Compile Include="Assets\code\Camera Scripts\SmoothFollow.js" />
      <Compile Include="Assets\code\Camera Scripts\SmoothLookAt.js" />
-     <Compile Include="Assets\code\Car Control\AICar_Script.js" />
      <Compile Include="Assets\code\Car Control\PlayerCar_Script.js" />
      <Compile Include="Assets\code\Car Control\WheelAlignment_Script.js" />
      <Compile Include="Assets\code\General\DrawWaypointGizmos_Script.js" />
