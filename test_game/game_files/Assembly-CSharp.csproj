@@ -46,6 +46,10 @@
   <ItemGroup>
      <Compile Include="Assets\code\Camera Scripts\MouseLook.cs" />
      <Compile Include="Assets\code\General\PlayerController.cs" />
+     <Compile Include="Assets\code\General\cameraOverlay.cs" />
+     <Compile Include="Assets\code\General\enemyCollision.cs" />
+     <Compile Include="Assets\code\Player2\bullet.cs" />
+     <Compile Include="Assets\code\Player2\shoot.cs" />
      <None Include="Assets\art\models\car\shaders\ConstantColorUnderLayer_Shader.shader" />
      <None Include="Assets\art\models\car\MOD_Car.xml" />
   </ItemGroup>
