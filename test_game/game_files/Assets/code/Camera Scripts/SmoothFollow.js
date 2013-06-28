@@ -27,6 +27,11 @@ function LateUpdate () {
 	// Early out if we don't have a target
 	if (!target)
 		return;
+	var wantedRotationAngle: float;
+	var wantedHeight: float;
+	var currentRotationAngle: float;
+	var currentHeight: float;
+	var currentRotation: Quaternion;
 	
 	// Calculate the current rotation angles
 	wantedRotationAngle = target.eulerAngles.y;
