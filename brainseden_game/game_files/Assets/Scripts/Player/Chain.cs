@@ -14,11 +14,21 @@ public class Chain : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		MaximumDistance = MaxDistance;
+		Physics.gravity = Vector3.down*20f;
+		
+		//set the limit of the joint to this distance
+		SoftJointLimit limit = Player1Anchor.transform.parent.GetComponent<ConfigurableJoint>().linearLimit;
+		limit.limit = MaxDistance;
+		Player1Anchor.transform.parent.GetComponent<ConfigurableJoint>().linearLimit = limit;
+		
+		MaximumDistance = MaxDistance*0.5f;
+//		MaximumDistance = MaxDistance;
+		
+//		Player1Anchor.transform.parent.GetComponent<ConfigurableJoint>().linearLimit.limit = MaxDistance;
 		if(NumObjects %2 == 0)++NumObjects;
 		ChainLinks = new GameObject[NumObjects];
 		
-		float distStep = MaxDistance / NumObjects;
+		float distStep = MaximumDistance / NumObjects;
 		
 		
 		
@@ -49,7 +59,7 @@ public class Chain : MonoBehaviour {
 			
 			
 		}
-		Player2Anchor.transform.parent.position = Player1Anchor.transform.position + Vector3.right*MaxDistance;
+		Player2Anchor.transform.parent.position = Player1Anchor.transform.position + Vector3.right*MaximumDistance;
 		Player2Anchor.GetComponent<CharacterJoint>().connectedBody = ChainLinks[NumObjects-1].rigidbody;
 	}
 	
