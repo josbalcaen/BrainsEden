@@ -1,0 +1,7 @@
+metadata/
+ScriptAssemblies/
+*.* 
+*.svd
+*.userprefs
+*.suo
+*.sln
