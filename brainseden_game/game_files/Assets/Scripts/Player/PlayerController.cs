@@ -3,9 +3,11 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour 
 {
-	public float SwipeMultiplier = 1.5f;
-	public float MinSwipeDistance = 300.0f;
-	public float MaxSwipeDistance = 600.0f;
+	public float SwipeMultiplier = 1.0f;
+	public float MinSwipeDistance = 150.0f;
+	public float MaxSwipeDistance = 300.0f;
+	public float LiftThrowDistance = 600.0f;
+	public GameObject OtherPlayer;
 	
 	private bool _unitSelected;
 	private Vector3 _startMousePos = new Vector3(0,0,0);
@@ -21,7 +23,7 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		// Select object
+		// Select player
 		if (Input.GetButtonDown ("Fire1")) 
 		{
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -40,7 +42,7 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 		
-		// Launch selected unit
+		// Launch selected player
 		if(Input.GetButtonUp("Fire1") && _unitSelected)
 		{
 			_endMousePos = Input.mousePosition;
@@ -62,9 +64,24 @@ public class PlayerController : MonoBehaviour
 				swipeDistance *= MaxSwipeDistance;
 			}
 			
+			// Lift-throw ability
+			if(IsPositionValid() && OtherPlayer.rigidbody.velocity == Vector3.zero)
+			{
+				swipeDistance.Normalize();
+				swipeDistance *= LiftThrowDistance;
+			}
+			
 			Debug.Log("Swipe magnitude: " + swipeDistance.magnitude);
 			
 			_selectedUnit.AddForce(swipeDistance);
+			
+			// Enable gravity when clicked on unit
+			_selectedUnit.rigidbody.useGravity = true;
 		}
+	}
+	
+	private bool IsPositionValid()
+	{
+		return OtherPlayer.transform.position.y > transform.position.y && Mathf.Abs(OtherPlayer.transform.position.x - transform.position.x) < 2;
 	}
 }
