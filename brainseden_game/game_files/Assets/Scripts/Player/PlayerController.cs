@@ -3,6 +3,10 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour 
 {
+	public float SwipeMultiplier = 1.5f;
+	public float MinSwipeDistance = 300.0f;
+	public float MaxSwipeDistance = 600.0f;
+	
 	private bool _unitSelected;
 	private Vector3 _startMousePos = new Vector3(0,0,0);
 	private Vector3 _endMousePos = new Vector3(0,0,0);
@@ -41,7 +45,22 @@ public class PlayerController : MonoBehaviour
 		{
 			_endMousePos = Input.mousePosition;
 			_unitSelected = false;
+			
+			// Calculate swipe distance and multiply with modifier
 			Vector3 swipeDistance = _endMousePos - _startMousePos;
+			swipeDistance *= SwipeMultiplier;
+			
+			// Force the swipe distance to min and max value
+			if(swipeDistance.magnitude < MinSwipeDistance)
+			{
+				swipeDistance.Normalize();
+				swipeDistance *= MinSwipeDistance;
+			}
+			else if(swipeDistance.magnitude > MaxSwipeDistance)
+			{
+				swipeDistance.Normalize();
+				swipeDistance *= MaxSwipeDistance;
+			}
 			
 			Debug.Log("Swipe magnitude: " + swipeDistance.magnitude);
 			

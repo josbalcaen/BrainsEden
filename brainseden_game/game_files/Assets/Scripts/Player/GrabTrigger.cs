@@ -19,7 +19,7 @@ public class GrabTrigger : MonoBehaviour
 	// Disable gravity and velocity when entered a grabpoint trigger
 	void OnTriggerEnter(Collider other) 
 	{
-		if(other.name == "Player")
+		if(other.name == "Player 1" || other.name == "Player 2")
 		{
 			//other.transform.position = Vector3.Lerp(other.transform.position, transform.position, 0.25f);
 			other.rigidbody.useGravity = false;
@@ -30,7 +30,7 @@ public class GrabTrigger : MonoBehaviour
 	// Enable gravity again when out of grabpoint trigger zone
 	void OnTriggerExit(Collider other) 
 	{
-		if(other.name == "Player")
+		if(other.name == "Player 1" || other.name == "Player 2")
 		{
 			other.rigidbody.useGravity = true;
 		}
