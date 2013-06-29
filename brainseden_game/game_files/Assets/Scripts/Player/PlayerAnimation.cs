@@ -12,11 +12,14 @@ public class Animations
 
 public enum CharacterAnimationType
 {
-	Idle,
-	Jumping,
-	Swinging,
-	Falling,
-	Hanging
+	Standing,
+	Holdon,
+	TensionJump,
+	JumpStart,
+	JumpLoop,
+	JumpEnd,
+	Dangling,
+	Swinging
 }
 
 public class AnimationEventArgs: EventArgs
@@ -55,17 +58,45 @@ public class PlayerAnimation : MonoBehaviour {
 		if(_AnimDict.Count == 0)
 		{
 			//Idle
-			_AnimDict.Add(CharacterAnimationType.Idle,new Animations()
+			_AnimDict.Add(CharacterAnimationType.Standing,new Animations()
 			{
-				Loop = new String[]{"AegirIdle"}
+				Loop = new String[]{"AegirStanding"}
 			});
-			//Jump
-			_AnimDict.Add(CharacterAnimationType.Jumping,new Animations()
+			//Idle Hanging
+			_AnimDict.Add(CharacterAnimationType.Holdon,new Animations()
 			{
-				Start = "AegirFalling",
-				Loop = new String[]{"AegirJumping"}
+				Loop = new String[]{"AegirHoldon"}
 			});
-			
+			//Jump tension
+			_AnimDict.Add(CharacterAnimationType.TensionJump,new Animations()
+			{
+				Loop = new String[]{"AegirTensionJump"}
+			});
+			//Jump start
+			_AnimDict.Add(CharacterAnimationType.JumpStart,new Animations()
+			{
+				Loop = new String[]{"AegirJumpStart"}
+			});
+			//Jump loop
+			_AnimDict.Add(CharacterAnimationType.JumpLoop,new Animations()
+			{
+				Loop = new String[]{"AegirJumpLoop"}
+			});
+			//Jump end
+			_AnimDict.Add(CharacterAnimationType.JumpEnd,new Animations()
+			{
+				Loop = new String[]{"AegirJumpEnd"}
+			});
+			//Dangling
+			_AnimDict.Add(CharacterAnimationType.JumpEnd,new Animations()
+			{
+				Loop = new String[]{"AegirDangling"}
+			});
+			//Swinging
+			_AnimDict.Add(CharacterAnimationType.Swinging,new Animations()
+			{
+				Loop = new String[]{"AegirSwinging"}
+			});
 		}
 		_Initialized = true;
 	}
@@ -77,7 +108,7 @@ public class PlayerAnimation : MonoBehaviour {
 		animation["AegirIdle"].speed = 0.0001f;
 		if(_Initialized)return;
 		Initialize();
-		PlayAnimation(CharacterAnimationType.Jumping,true,1.0f);
+		PlayAnimation(CharacterAnimationType.Standing,true,1.0f);
 	
 	}
 	
