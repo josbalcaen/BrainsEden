@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
 				// A unit has been selected
 				if (hit.rigidbody != null)
 				{
+					
 					_selectedUnit = hit.rigidbody;
 					_unitSelected = true;
 					_startMousePos = Input.mousePosition;
@@ -76,6 +77,8 @@ public class PlayerController : MonoBehaviour
 			_selectedUnit.AddForce(swipeDistance);
 			
 			// Enable gravity when clicked on unit
+			//ALso set kinematic to false
+			_selectedUnit.rigidbody.isKinematic = false;
 			_selectedUnit.rigidbody.useGravity = true;
 		}
 	}
