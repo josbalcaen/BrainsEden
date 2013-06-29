@@ -68,6 +68,9 @@ public class PlayerController : MonoBehaviour
 				swipeDistance *= MaxSwipeDistance;
 			}
 			
+			// Apply hardcoded fixes
+			HardcodedFixes();
+			
 			// Lift-throw ability
 			if(IsPositionValid() && OtherPlayer.rigidbody.velocity == Vector3.zero)
 			{
@@ -75,7 +78,7 @@ public class PlayerController : MonoBehaviour
 				swipeDistance *= LiftThrowDistance;
 			}
 			
-			Debug.Log("Swipe magnitude: " + swipeDistance.magnitude);
+			Debug.Log("Swipe magnitude: " + swipeDistance);
 			
 			_selectedUnit.AddForce(swipeDistance);
 			
@@ -87,5 +90,33 @@ public class PlayerController : MonoBehaviour
 	private bool IsPositionValid()
 	{
 		return OtherPlayer.transform.position.y > transform.position.y && Mathf.Abs(OtherPlayer.transform.position.x - transform.position.x) < 2;
+	}
+	
+	// These values are propably not correct, if you notice some weird jumps occur this is where you need to look!
+	private void HardcodedFixes()
+	{
+		// HARDCODED: Increase the Y value if it's too low for large distances
+		if(swipeDistance.y > 0 && swipeDistance.y < 350 && Mathf.Abs(swipeDistance.x) > 300)
+		{
+			swipeDistance.y = 350;
+		}
+		
+		// HARDCODED: Increase the Y value if it's too low for large distances
+		if(swipeDistance.y > 0 && swipeDistance.y < 450 && Mathf.Abs(swipeDistance.x) > 400)
+		{
+			swipeDistance.y = 450;
+		}
+		
+		// HARDCODED: Increase the Y value if it's too low for large distances
+		if(swipeDistance.y < -50 && Mathf.Abs(swipeDistance.x) > 300)
+		{
+			swipeDistance.y = 150;
+		}
+		
+		// HARDCODED: Increase the Y value if it's too low for high jumps
+		if(swipeDistance.y > 400)
+		{
+			swipeDistance.y += 75;
+		}
 	}
 }
