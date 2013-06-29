@@ -20,7 +20,7 @@ public class AnchorGenerator : MonoBehaviour {
 		{
 			//Gizmos.DrawIcon(anchor_points[i].transform.position, "Anchor");
 			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireSphere(anchor_points[i].transform.position, 1);
+			Gizmos.DrawWireSphere(anchor_points[i].transform.position, 0.5f);
 		}
 	}
 }

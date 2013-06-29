@@ -17,7 +17,7 @@ public class ToolsButtons: EditorWindow
     {
         GUILayout.BeginVertical();
 
-        if (GUILayout.Button("Create anchor points from selected"))
+        if (GUILayout.Button("AnchorPoints: Create from selected"))
         {
             _prefab = GameObject.FindGameObjectWithTag("Manager").GetComponent<AnchorGenerator>().prefab;
 			GameObject[] _selection= Selection.gameObjects;
@@ -30,6 +30,16 @@ public class ToolsButtons: EditorWindow
 			}
 
         }
+		if (GUILayout.Button("AnchorPoints: 0 zpos"))
+        {
+			GameObject[] _points = GameObject.FindGameObjectsWithTag("AnchorPoint");
+			for (int i = 0; i < _points.Length; i++)
+			{
+				Vector3 _pos = _points[i].transform.position;
+				_pos.z = 0;
+				_points[i].transform.position = _pos;
+			}
+		}
 		/*
         if (GUILayout.Button("Conditions"))
         {
