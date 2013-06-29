@@ -12,12 +12,16 @@ Assembly-CSharp-Editor-firstpass.pidb
 Assembly-CSharp-Editor-vs.csproj
 Assembly-CSharp-Editor.csproj
 Assembly-CSharp-Editor.pidb
+Assembly-CSharp-Editor.dll
+Assembly-CSharp-Editor.dll.mdb
 Assembly-CSharp-firstpass-vs.csproj
 Assembly-CSharp-firstpass.csproj
 Assembly-CSharp-firstpass.pidb
 Assembly-CSharp-vs.csproj
 Assembly-CSharp.csproj
 Assembly-CSharp.pidb
+Assembly-CSharp.dll
+Assembly-CSharp.dll.mdb
 Assembly-UnityScript-Editor-firstpass-vs.unityproj
 Assembly-UnityScript-Editor-firstpass.pidb
 Assembly-UnityScript-Editor-firstpass.unityproj
