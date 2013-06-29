@@ -46,6 +46,9 @@ public class PlayerController : MonoBehaviour
 		// Launch selected player
 		if(Input.GetButtonUp("Fire1") && _unitSelected)
 		{
+			// Set kinematic to false
+			_selectedUnit.rigidbody.isKinematic = false;
+			
 			_endMousePos = Input.mousePosition;
 			_unitSelected = false;
 			
@@ -77,8 +80,6 @@ public class PlayerController : MonoBehaviour
 			_selectedUnit.AddForce(swipeDistance);
 			
 			// Enable gravity when clicked on unit
-			//ALso set kinematic to false
-			_selectedUnit.rigidbody.isKinematic = false;
 			_selectedUnit.rigidbody.useGravity = true;
 		}
 	}
