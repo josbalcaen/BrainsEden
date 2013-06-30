@@ -8,11 +8,13 @@ public class PlayerKiller : MonoBehaviour {
 	public GameObject Player2;
 	private float _RespawnTimer;
 	public float RespawnTime;
+	
 	// Use this for initialization
 	void Start () 
 	{
 		_RespawnTimer = 0;
 		_CheckpointManager = GetComponent<Checkpoints>();
+		RespawnPlayer();
 	}
 	
 	public void PlayerDied()

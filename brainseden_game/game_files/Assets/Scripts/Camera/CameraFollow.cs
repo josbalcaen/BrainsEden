@@ -6,8 +6,8 @@ public class CameraFollow : MonoBehaviour {
 	public Transform Player1;
 	public Transform Player2;
 	public float CamDist;
+	public float CamDistFar;
 	public float CamHeightOffset;
-	public float Acceleration;
 	
 	private Vector3 _DesiredTargetPos;
 	private Vector3 _CurrentTargetPos;
@@ -15,17 +15,20 @@ public class CameraFollow : MonoBehaviour {
 	private bool _PlayerDied = false;
 	public float Damping = 0.4f;
 	
-	private Vector3 _velocity;
+	private float _CurrentCamDist = 0;
+	private float _DesiredCamDist = 0;
+
 	// Use this for initialization
 	void Start ()
 	{
+		_CurrentCamDist = _DesiredCamDist = CamDist;
 		CalcDesiredPos();
 		_CurrentTargetPos = _DesiredTargetPos;
 	}
 	void CalcLookat()
 	{
 		
-		Vector3 camPos = _CurrentTargetPos - Vector3.forward*CamDist + Vector3.up*CamHeightOffset;
+		Vector3 camPos = _CurrentTargetPos - Vector3.forward*_CurrentCamDist + Vector3.up*CamHeightOffset;
 		transform.position = camPos;
 		transform.LookAt(_CurrentTargetPos);
 	}
@@ -49,13 +52,26 @@ public class CameraFollow : MonoBehaviour {
 		{
 			CalcDesiredPos();
 		}
-		Vector3 toTargetPos = _DesiredTargetPos - _CurrentTargetPos;
-		float dist = toTargetPos.magnitude;
+	
+		float lerpVal = Time.deltaTime*0.1f*60f;
 		
-		_velocity += toTargetPos*dist*Acceleration*Time.deltaTime;
-		_velocity *= Damping;
-		_CurrentTargetPos += _velocity*Time.deltaTime;
-//		_CurrentTargetPos = Vector3.Lerp(_CurrentTargetPos,_DesiredTargetPos,lerpVal);
+		
+		
+		
+		if(Input.GetKeyDown(KeyCode.Space))
+		{
+			_DesiredCamDist = CamDistFar;
+		}
+		if(Input.GetKeyUp(KeyCode.Space))
+		{
+			_DesiredCamDist = CamDist;
+		}
+		_CurrentTargetPos = Vector3.Lerp(_CurrentTargetPos,_DesiredTargetPos,lerpVal);
+		_CurrentCamDist = Mathf.Lerp(_CurrentCamDist,_DesiredCamDist,lerpVal);
+		
 		CalcLookat();
+		
+		
+		
 	}
 }

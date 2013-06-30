@@ -5,7 +5,8 @@ public class Checkpoints : MonoBehaviour
 {
 	public List<GameObject> CheckPointsList = new List<GameObject>();
 	
-	private int _highestCheckpoint = 0;
+	
+	public int CurrentCheckPoint = 0;
 	public void Start()
 	{
 		for(int i = 0; i < CheckPointsList.Count; ++i)
@@ -16,12 +17,12 @@ public class Checkpoints : MonoBehaviour
 	
 	public void CheckpointReached(int index)
 	{
-		_highestCheckpoint = Mathf.Max(index,_highestCheckpoint);
+		CurrentCheckPoint = Mathf.Max(index,CurrentCheckPoint);
 	}
 	
 	public Vector3 GetSpawnPos()
 	{
-		return CheckPointsList[_highestCheckpoint].GetComponent<Checkpoint>().SpawnPos.transform.position;
+		return CheckPointsList[CurrentCheckPoint].GetComponent<Checkpoint>().SpawnPos.transform.position;
 	}
 
 }
