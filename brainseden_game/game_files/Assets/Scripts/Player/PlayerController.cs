@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 	private Vector3 _startMousePos = new Vector3(0,0,0);
 	private Vector3 _endMousePos = new Vector3(0,0,0);
 	private Rigidbody _selectedUnit;
-	
+	private Transform _Anchor;
 	private float _distanceToGround;
 
 	// Use this for initialization
@@ -49,14 +49,13 @@ public class PlayerController : MonoBehaviour
 		{
 			// Play animation
 			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Standing, false);
+			
+			//Debug.Log("grounded!");
 		}
 		
 		// Select player
 		if (Input.GetButtonDown ("Fire1")) 
 		{
-			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.TensionJump, false);
-			
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 			
 			RaycastHit hit = new RaycastHit();
@@ -67,11 +66,30 @@ public class PlayerController : MonoBehaviour
 				if (hit.rigidbody != null)
 				{
 					_selectedUnit = hit.rigidbody;
-					_unitSelected = true;
-					_startMousePos = Input.mousePosition;
+					// Check if the selected unit is me!
+					_unitSelected = _selectedUnit.transform.gameObject == gameObject;
+					
+					if(_unitSelected)
+					{
+						// Play animation
+						GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.TensionJump, false);
+						_startMousePos = Input.mousePosition;
+					}
 				}
 			}
 		}
+		
+		/*if(!IsGrabbingAnchor)
+		{
+			if(IsPositionValid())
+			{
+				Debug.Log("Valid");
+			}
+			else
+			{
+				Debug.Log("InValid");
+			}
+		}*/
 		
 		// Launch selected player
 		if(Input.GetButtonUp("Fire1") && _unitSelected)
@@ -107,13 +125,28 @@ public class PlayerController : MonoBehaviour
 			// Lift-throw ability
 			if(IsPositionValid() && OtherPlayer.rigidbody.velocity == Vector3.zero)
 			{
+				Debug.Log("Lifted!");
 				swipeDistance.Normalize();
 				swipeDistance *= LiftThrowDistance;
 			}
 			
 			Debug.Log("Swipe magnitude: " + swipeDistance);
 			
+			
+			
+			// Added because script used to execute twice
+			if(IsGrabbingAnchor || IsGrounded() || rigidbody.velocity.magnitude < 5.0f)
+			{
+				swipeDistance*=2.0f;
+			}
+			
 			_selectedUnit.AddForce(swipeDistance);
+			
+			//Gravity && kinematic
+			_Anchor = null;
+			rigidbody.useGravity = true;
+			rigidbody.isKinematic = false;
+			
 			
 			// Enable gravity when clicked on unit, disable lerp effect
 			_selectedUnit.rigidbody.useGravity = true;
@@ -125,11 +158,14 @@ public class PlayerController : MonoBehaviour
 		{
 			transform.position = Vector3.Lerp(transform.position, _AnchorPos - new Vector3(0,HangHeight,0), 0.1f * Time.deltaTime * 60);
 		}
+		
+		//Debug.Log("Velocity: " + rigidbody.velocity.magnitude);
 	}
 	
 	private bool IsPositionValid()
 	{
 		return OtherPlayer.transform.position.y > transform.position.y && Mathf.Abs(OtherPlayer.transform.position.x - transform.position.x) < 2;
+		
 	}
 	
 	// These values are propably not correct, if you notice some weird jumps occur this is where you need to look!
@@ -159,9 +195,23 @@ public class PlayerController : MonoBehaviour
 			swipeDistance.y += 75;
 		}
 	}
-	
-	public void GrabAnchor(Vector3 anchorPos)
+	public void ReleaseAnchor(Transform anchor)
 	{
+//		if(anchor != _Anchor)return;
+		//Anchor = null;
+//		//Gravity && kinematic
+//		rigidbody.useGravity = true;
+//		rigidbody.isKinematic = false;
+		
+	}
+	public void GrabAnchor(Transform anchor)
+	{
+		
+		if(IsGrabbingAnchor)return;
+		
+		rigidbody.useGravity = false;
+		rigidbody.velocity = Vector3.zero;
+		rigidbody.isKinematic = true;
 		// Play animation
 		GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.JumpEnd, false);
 		
@@ -169,6 +219,7 @@ public class PlayerController : MonoBehaviour
 		GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Holdon, false);
 		
 		IsGrabbingAnchor = true;
-		_AnchorPos = anchorPos;
+		_Anchor = anchor;
+		_AnchorPos = anchor.position;
 	}
 }
