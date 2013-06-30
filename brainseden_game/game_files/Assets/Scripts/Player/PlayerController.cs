@@ -204,7 +204,7 @@ public class PlayerController : MonoBehaviour
 			swipeDistance*=ReducedSwipeForce;
 		}
 		
-		AddForce(swipeDistance);
+		rigidbody.AddForce(swipeDistance);
 		
 		//Gravity && kinematic
 		_Anchor = null;
