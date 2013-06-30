@@ -58,8 +58,17 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{	
+<<<<<<< HEAD
 		
 		bool grounded = IsGrounded();
+=======
+		// Don't allow the player to make changes to the players when still in a menu
+		if(CameraFollow.CurrentCameraMode == CameraMode.Menu)
+		{
+			return;
+		}
+		
+>>>>>>> Scripts support main menu and breakable objects
 		// Check if the player is standing on the ground
 		if(grounded && !IsGrabbingAnchor && !_tension)
 		{
@@ -338,6 +347,10 @@ public class PlayerController : MonoBehaviour
 	// Called when the character let's go of the anchor
 	public void ReleaseAnchor(Transform anchor)
 	{	
+		_Anchor = null;
+		rigidbody.useGravity = true;
+		rigidbody.isKinematic = false;
+		IsGrabbingAnchor = false;
 	}
 	
 	public void GrabAnchor(Transform anchor)
