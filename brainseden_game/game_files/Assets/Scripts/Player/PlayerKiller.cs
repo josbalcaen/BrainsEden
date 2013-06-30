@@ -37,6 +37,8 @@ public class PlayerKiller : MonoBehaviour {
 		Player2.rigidbody.useGravity = true;
 		Player1.rigidbody.velocity = Vector3.zero;
 		Player2.rigidbody.velocity = Vector3.zero;
+		Player1.GetComponent<PlayerController>().IsGrabbingAnchor = false;
+		Player2.GetComponent<PlayerController>().IsGrabbingAnchor = false;
 	}
 	// Update is called once per frame
 	void Update () 
