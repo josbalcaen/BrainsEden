@@ -106,12 +106,13 @@ public class PlayerAnimation : MonoBehaviour {
 			});
 			_AnimDict.Add(CharacterAnimationType.GroundTension,new Animations()
 			{
-				Loop = new String[]{"AegirGroundTension"}
+				Loop = new String[]{"AegirLaunchGround"}
 			});
 			_AnimDict.Add(CharacterAnimationType.HardLanding,new Animations()
 			{
 				Loop = new string[]{"AegirJumpGround"}
 			});
+			
 		}
 		_Initialized = true;
 	}
