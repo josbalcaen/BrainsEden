@@ -20,17 +20,13 @@ public class GrabTrigger : MonoBehaviour
 	// Disable gravity and velocity when entered a grabpoint trigger
 	void OnTriggerEnter(Collider other) 
 	{	
-		if((other.name == "Player 1" || other.name == "Player 2"))
+		if(other.name == "Player 1" || other.name == "Player 2")
 		{
 			++_numAttachedPlayers;
 
 			if(_numAttachedPlayers == 1 )
 			{
-				other.rigidbody.useGravity = false;
-				other.rigidbody.velocity = Vector3.zero;
-				other.rigidbody.isKinematic = true;
-				
-				other.GetComponent<PlayerController>().GrabAnchor(transform.position);
+				other.GetComponent<PlayerController>().GrabAnchor(transform);
 			}
 			
 		}
@@ -39,13 +35,13 @@ public class GrabTrigger : MonoBehaviour
 	// Enable gravity again when out of grabpoint trigger zone
 	void OnTriggerExit(Collider other) 
 	{
-		if((other.name == "Player 1" || other.name == "Player 2"))
+		if(other.name == "Player 1" || other.name == "Player 2")
 		{
 			--_numAttachedPlayers;
 			if(_numAttachedPlayers == 0)
 			{
-				other.rigidbody.useGravity = true;
-				other.rigidbody.isKinematic = false;
+				other.GetComponent<PlayerController>().ReleaseAnchor(transform);
+				
 			}
 		}
     }

@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 	private Vector3 _startMousePos = new Vector3(0,0,0);
 	private Vector3 _endMousePos = new Vector3(0,0,0);
 	private Rigidbody _selectedUnit;
-	
+	private Transform Anchor;
 	private float _distanceToGround;
 
 	// Use this for initialization
@@ -54,9 +54,6 @@ public class PlayerController : MonoBehaviour
 		// Select player
 		if (Input.GetButtonDown ("Fire1")) 
 		{
-			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.TensionJump, false);
-			
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 			
 			RaycastHit hit = new RaycastHit();
@@ -67,8 +64,15 @@ public class PlayerController : MonoBehaviour
 				if (hit.rigidbody != null)
 				{
 					_selectedUnit = hit.rigidbody;
-					_unitSelected = true;
-					_startMousePos = Input.mousePosition;
+					// Check if the selected unit is me!
+					_unitSelected = _selectedUnit.transform.gameObject == gameObject;
+					
+					if(_unitSelected)
+					{
+						// Play animation
+						GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.TensionJump, false);
+						_startMousePos = Input.mousePosition;
+					}
 				}
 			}
 		}
@@ -112,6 +116,9 @@ public class PlayerController : MonoBehaviour
 			}
 			
 			Debug.Log("Swipe magnitude: " + swipeDistance);
+			
+			// Added because script used to execute twice
+			swipeDistance*=1.5f;
 			
 			_selectedUnit.AddForce(swipeDistance);
 			
@@ -159,9 +166,22 @@ public class PlayerController : MonoBehaviour
 			swipeDistance.y += 75;
 		}
 	}
-	
-	public void GrabAnchor(Vector3 anchorPos)
+	public void ReleaseAnchor(Transform anchor)
 	{
+		if(anchor != Anchor)return;
+		//Gravity && kinematic
+		rigidbody.useGravity = true;
+		rigidbody.isKinematic = false;
+		
+	}
+	public void GrabAnchor(Transform anchor)
+	{
+		
+		if(IsGrabbingAnchor)return;
+		
+		rigidbody.useGravity = false;
+		rigidbody.velocity = Vector3.zero;
+		rigidbody.isKinematic = true;
 		// Play animation
 		GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.JumpEnd, false);
 		
@@ -169,6 +189,7 @@ public class PlayerController : MonoBehaviour
 		GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Holdon, false);
 		
 		IsGrabbingAnchor = true;
-		_AnchorPos = anchorPos;
+		Anchor = anchor;
+		_AnchorPos = anchor.position;
 	}
 }
