@@ -30,11 +30,10 @@ public class CameraFollow : MonoBehaviour {
 	
 	private Vector3 _CurrentCamPos;
 	private Vector3 _DesiredCamPos;
+	
 	// Variables for intro screen
 	private int _CamPosIndex = 0;
-	private int _CamTargetPosIndex = 0;
 	public List<Transform> _CamPosList = new List<Transform>();
-	public List<Transform> _CamTargetPosList = new List<Transform>();
 	public Transform EndTarget;
 	
 	private Vector3 _LookAtPos = new Vector3(0,0,0);
