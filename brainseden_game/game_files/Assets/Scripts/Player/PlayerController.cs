@@ -118,7 +118,13 @@ public class PlayerController : MonoBehaviour
 			Debug.Log("Swipe magnitude: " + swipeDistance);
 			
 			// Added because script used to execute twice
-			swipeDistance*=1.5f;
+			swipeDistance*=2.0f;
+			
+			// Reduce the force if the player IS NOT holding an anchor (so if he is mid-air)
+			if(IsGrabbingAnchor)
+			{
+				swipeDistance /= 2.0f;
+			}
 			
 			_selectedUnit.AddForce(swipeDistance);
 			
