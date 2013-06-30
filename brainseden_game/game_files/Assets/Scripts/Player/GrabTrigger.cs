@@ -4,7 +4,6 @@ using System.Collections;
 public class GrabTrigger : MonoBehaviour 
 {
 	public int _numAttachedPlayers = 0;
-	public bool _isActive = true;
 	
 	// Use this for initialization
 	void Start () 
@@ -24,14 +23,14 @@ public class GrabTrigger : MonoBehaviour
 		if((other.name == "Player 1" || other.name == "Player 2"))
 		{
 			++_numAttachedPlayers;
-			//_isActive = false;
+
 			if(_numAttachedPlayers == 1 )
 			{
-				_isActive = false;
-				//other.transform.position = Vector3.Lerp(other.transform.position, transform.position, 0.25f);
 				other.rigidbody.useGravity = false;
 				other.rigidbody.velocity = Vector3.zero;
 				other.rigidbody.isKinematic = true;
+				
+				other.GetComponent<PlayerController>().GrabAnchor(transform.position);
 			}
 			
 		}
@@ -45,8 +44,6 @@ public class GrabTrigger : MonoBehaviour
 			--_numAttachedPlayers;
 			if(_numAttachedPlayers == 0)
 			{
-				_isActive = true;
-				//_isActive = true;
 				other.rigidbody.useGravity = true;
 				other.rigidbody.isKinematic = false;
 			}

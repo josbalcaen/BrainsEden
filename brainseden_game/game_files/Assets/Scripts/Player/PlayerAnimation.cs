@@ -27,7 +27,7 @@ public class AnimationEventArgs: EventArgs
 	public CharacterAnimationType AnimState{get; private set;}
 	public AnimationEventArgs ( CharacterAnimationType type)
 	{
-		AnimState= type;
+		AnimState = type;
 	}
 }
 
@@ -88,7 +88,7 @@ public class PlayerAnimation : MonoBehaviour {
 				Loop = new String[]{"AegirJumpEnd"}
 			});
 			//Dangling
-			_AnimDict.Add(CharacterAnimationType.JumpEnd,new Animations()
+			_AnimDict.Add(CharacterAnimationType.Dangling,new Animations()
 			{
 				Loop = new String[]{"AegirDangling"}
 			});
@@ -104,8 +104,8 @@ public class PlayerAnimation : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{	
-		animation["AegirFalling"].speed = 0.0001f;
-		animation["AegirIdle"].speed = 0.0001f;
+//		animation["AegirFalling"].speed = 0.0001f;
+//		animation["AegirIdle"].speed = 0.0001f;
 		if(_Initialized)return;
 		Initialize();
 		PlayAnimation(CharacterAnimationType.Standing,true,1.0f);
