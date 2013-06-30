@@ -46,6 +46,8 @@
   <ItemGroup>
      <Compile Include="Assets\Editor\CreateAchorPoints.cs" />
      <Compile Include="Assets\Editor\ToolsButtons.cs" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted_Blend.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedHeightBlend.shader" />
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
  </Reference>

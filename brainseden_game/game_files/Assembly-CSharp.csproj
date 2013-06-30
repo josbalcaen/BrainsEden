@@ -46,8 +46,20 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Camera\CameraFollow.cs" />
      <Compile Include="Assets\Scripts\General\AnchorGenerator.cs" />
+     <Compile Include="Assets\Scripts\General\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\General\Tutorial.cs" />
      <Compile Include="Assets\Scripts\Player\Chain.cs" />
+     <Compile Include="Assets\Scripts\Player\GrabTrigger.cs" />
+     <Compile Include="Assets\Scripts\Player\PlayerAnimation.cs" />
+     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\Player\PlayerKiller.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerMove.cs" />
+     <Compile Include="Assets\Scripts\Sound\Sounds.cs" />
+     <Compile Include="Assets\Scripts\Triggers\Checkpoint.cs" />
+     <Compile Include="Assets\Scripts\Triggers\Checkpoints.cs" />
+     <Compile Include="Assets\Scripts\Triggers\KillZoneScript.cs" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted_Blend.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedHeightBlend.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
