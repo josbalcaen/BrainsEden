@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 	private Vector3 _startMousePos = new Vector3(0,0,0);
 	private Vector3 _endMousePos = new Vector3(0,0,0);
 	private Rigidbody _selectedUnit;
-	private Transform Anchor;
+	private Transform _Anchor;
 	private float _distanceToGround;
 
 	// Use this for initialization
@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
 		{
 			// Play animation
 			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Standing, false);
+			
+			//Debug.Log("grounded!");
 		}
 		
 		// Select player
@@ -76,6 +78,18 @@ public class PlayerController : MonoBehaviour
 				}
 			}
 		}
+		
+		/*if(!IsGrabbingAnchor)
+		{
+			if(IsPositionValid())
+			{
+				Debug.Log("Valid");
+			}
+			else
+			{
+				Debug.Log("InValid");
+			}
+		}*/
 		
 		// Launch selected player
 		if(Input.GetButtonUp("Fire1") && _unitSelected)
@@ -111,22 +125,28 @@ public class PlayerController : MonoBehaviour
 			// Lift-throw ability
 			if(IsPositionValid() && OtherPlayer.rigidbody.velocity == Vector3.zero)
 			{
+				Debug.Log("Lifted!");
 				swipeDistance.Normalize();
 				swipeDistance *= LiftThrowDistance;
 			}
 			
 			Debug.Log("Swipe magnitude: " + swipeDistance);
 			
-			// Added because script used to execute twice
-			swipeDistance*=2.0f;
 			
-			// Reduce the force if the player IS NOT holding an anchor (so if he is mid-air)
-			if(IsGrabbingAnchor)
+			
+			// Added because script used to execute twice
+			if(IsGrabbingAnchor || IsGrounded() || rigidbody.velocity.magnitude < 5.0f)
 			{
-				swipeDistance /= 2.0f;
+				swipeDistance*=2.0f;
 			}
 			
 			_selectedUnit.AddForce(swipeDistance);
+			
+			//Gravity && kinematic
+			_Anchor = null;
+			rigidbody.useGravity = true;
+			rigidbody.isKinematic = false;
+			
 			
 			// Enable gravity when clicked on unit, disable lerp effect
 			_selectedUnit.rigidbody.useGravity = true;
@@ -138,11 +158,14 @@ public class PlayerController : MonoBehaviour
 		{
 			transform.position = Vector3.Lerp(transform.position, _AnchorPos - new Vector3(0,HangHeight,0), 0.1f * Time.deltaTime * 60);
 		}
+		
+		//Debug.Log("Velocity: " + rigidbody.velocity.magnitude);
 	}
 	
 	private bool IsPositionValid()
 	{
 		return OtherPlayer.transform.position.y > transform.position.y && Mathf.Abs(OtherPlayer.transform.position.x - transform.position.x) < 2;
+		
 	}
 	
 	// These values are propably not correct, if you notice some weird jumps occur this is where you need to look!
@@ -174,10 +197,11 @@ public class PlayerController : MonoBehaviour
 	}
 	public void ReleaseAnchor(Transform anchor)
 	{
-		if(anchor != Anchor)return;
-		//Gravity && kinematic
-		rigidbody.useGravity = true;
-		rigidbody.isKinematic = false;
+//		if(anchor != _Anchor)return;
+		//Anchor = null;
+//		//Gravity && kinematic
+//		rigidbody.useGravity = true;
+//		rigidbody.isKinematic = false;
 		
 	}
 	public void GrabAnchor(Transform anchor)
@@ -195,7 +219,7 @@ public class PlayerController : MonoBehaviour
 		GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Holdon, false);
 		
 		IsGrabbingAnchor = true;
-		Anchor = anchor;
+		_Anchor = anchor;
 		_AnchorPos = anchor.position;
 	}
 }
