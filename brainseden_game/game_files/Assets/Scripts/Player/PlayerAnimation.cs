@@ -117,7 +117,7 @@ public class PlayerAnimation : MonoBehaviour {
 	
 	public void PlayAnimation(CharacterAnimationType type, bool loop = true, float crossfade = 0f)
 	{
-	
+		if(_CurrentAnimationType == type && _Loop)return;
 		_Loop = loop;
 		if(!_Initialized)
 		{

@@ -23,11 +23,18 @@ public class PlayerController : MonoBehaviour
 	private float _distanceToGround;
 	
 	public event EventHandler AnchorGrabbed;
+	
+	private bool _Dangling = false;
+	private float _DanglingTimer = 0f;
+	private Vector3 _prevVelocity;
+	
+	private PlayerAnimation _AnimPlayer;
 
 	// Use this for initialization
 	void Start () 
 	{
 		_distanceToGround = collider.bounds.extents.y;
+		_AnimPlayer = GetComponentInChildren<PlayerAnimation>();
 	}
 	
 	bool IsGrounded()
@@ -49,36 +56,77 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{	
+		
+		bool grounded = IsGrounded();
 		// Check if the player is standing on the ground
-		if(IsGrounded() && IsGrabbingAnchor == false)
+		if(grounded && IsGrabbingAnchor == false)
 		{
 			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Standing, false);
+			_AnimPlayer.PlayAnimation(CharacterAnimationType.Standing, true,0.5f);
 		}
 		
 		// Make the player dangle when his velocity is low and the other player is attached to an anchor point
-		if(OtherPlayer.GetComponent<PlayerController>().IsGrabbingAnchor && !IsGrabbingAnchor && !IsGrounded() && rigidbody.velocity.magnitude < 3.0f 
-			&& OtherPlayer.GetComponent<PlayerController>().transform.position.y > transform.position.y
-			&& Mathf.Abs(OtherPlayer.transform.position.x - transform.position.x) < 1)
-		{
-			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Dangling, true, 0.5f);
-		}
-		
-		// Make the player dangle when his velocity is high and the other player is attached to an anchor point
-		if(OtherPlayer.GetComponent<PlayerController>().IsGrabbingAnchor && !IsGrabbingAnchor && !IsGrounded() && rigidbody.velocity.magnitude > 3.0f 
-			&& OtherPlayer.GetComponent<PlayerController>().transform.position.y > transform.position.y)
-		{
-			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Swinging, true, 0.5f);
-		}
+//		else if(OtherPlayer.GetComponent<PlayerController>().IsGrabbingAnchor && !IsGrabbingAnchor && !IsGrounded() && rigidbody.velocity.magnitude < 3.0f 
+//			&& OtherPlayer.GetComponent<PlayerController>().transform.position.y > transform.position.y
+//			&& Mathf.Abs(OtherPlayer.transform.position.x - transform.position.x) < 1)
+//		{
+//			// Play animation
+//			_AnimPlayer.PlayAnimation(CharacterAnimationType.Dangling, true, 0.5f);
+//		}
+//		
+//		// Make the player dangle when his velocity is high and the other player is attached to an anchor point
+//		if(OtherPlayer.GetComponent<PlayerController>().IsGrabbingAnchor && !IsGrabbingAnchor && !IsGrounded() && rigidbody.velocity.magnitude > 3.0f 
+//			&& OtherPlayer.GetComponent<PlayerController>().transform.position.y > transform.position.y)
+//		{
+//			
+//			// Play animation
+//			_AnimPlayer.PlayAnimation(CharacterAnimationType.Swinging, true, 0.5f);
+//		}
 		
 		// Make the character Jump
-		if(rigidbody.velocity.y > 5.0f)
+		if(!IsGrabbingAnchor && !grounded && !_unitSelected)
 		{
-			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.JumpLoop, true, 0.5f);
+			if(rigidbody.velocity.y > -2f && transform.position.y > OtherPlayer.transform.position.y)
+			{
+				// Play animation
+				_AnimPlayer.PlayAnimation(CharacterAnimationType.JumpLoop, true, 0.5f);
+				
+			}
+			else 
+			{
+				//Calculate change in velocity
+				Vector3 currentvel = rigidbody.velocity;
+				
+				if(_prevVelocity.y < 0 && Mathf.Abs(_prevVelocity.y / _prevVelocity.x)> 1)
+				{
+					if(_prevVelocity.magnitude - currentvel.magnitude > 5f)
+					{
+						_Dangling = true;
+						_DanglingTimer = 2f;
+						
+						_AnimPlayer.PlayAnimation(CharacterAnimationType.Dangling,true,0.5f);
+					}
+				}
+				
+				_prevVelocity = currentvel;
+				
+				if(_Dangling)
+				{
+					_DanglingTimer -= Time.deltaTime;
+					if(_DanglingTimer <=0)
+					{
+						_Dangling = false;
+						_AnimPlayer.PlayAnimation(CharacterAnimationType.Swinging,true,0.5f);
+					}
+				}
+				else
+				{
+					_AnimPlayer.PlayAnimation(CharacterAnimationType.Swinging,true,0.5f);
+				}
+			}
 		}
+		
+		
 		
 		// Select player
 		if (Input.GetButtonDown ("Fire1")) 
@@ -99,7 +147,7 @@ public class PlayerController : MonoBehaviour
 					if(_unitSelected)
 					{
 						// Play animation
-						GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.TensionJump, false);
+						_AnimPlayer.PlayAnimation(CharacterAnimationType.TensionJump, false);
 						_startMousePos = Input.mousePosition;
 					}
 				}
@@ -110,7 +158,7 @@ public class PlayerController : MonoBehaviour
 		if(Input.GetButtonUp("Fire1") && _unitSelected)
 		{
 			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.JumpStart, false);
+			_AnimPlayer.PlayAnimation(CharacterAnimationType.JumpStart, false);
 			
 			// Set kinematic to false
 			_selectedUnit.rigidbody.isKinematic = false;
@@ -167,14 +215,17 @@ public class PlayerController : MonoBehaviour
 			transform.position = Vector3.Lerp(transform.position, _AnchorPos - new Vector3(0,HangHeight,0), 0.1f * Time.deltaTime * 60);
 		}
 		
-		if(rigidbody.velocity.magnitude > 0.1f)
-		Debug.Log("Velocity: " + rigidbody.velocity);
+		Debug.Log(rigidbody.velocity.magnitude);
+//		if(rigidbody.velocity.magnitude > 0.1f)
+//		Debug.Log("Velocity: " + rigidbody.velocity);
+		
+		
 	}
 	
 	public void LaunchCharacter(Vector3 startPostion, Vector3 endPostion)
 	{
 		// Play animation
-		GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.JumpStart, false);
+		_AnimPlayer.PlayAnimation(CharacterAnimationType.JumpStart, false);
 		
 		// Set kinematic to false
 		rigidbody.isKinematic = false;
@@ -274,10 +325,10 @@ public class PlayerController : MonoBehaviour
 		rigidbody.velocity = Vector3.zero;
 		rigidbody.isKinematic = true;
 		// Play animation
-		GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.JumpEnd, false);
+		_AnimPlayer.PlayAnimation(CharacterAnimationType.JumpEnd, true);
 		
 		// Play animation
-		GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Holdon, false);
+		_AnimPlayer.PlayAnimation(CharacterAnimationType.Holdon, false,0.5f);
 		
 		IsGrabbingAnchor = true;
 		_Anchor = anchor;
