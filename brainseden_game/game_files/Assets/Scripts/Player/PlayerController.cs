@@ -57,20 +57,27 @@ public class PlayerController : MonoBehaviour
 		}
 		
 		// Make the player dangle when his velocity is low and the other player is attached to an anchor point
-		if(OtherPlayer.GetComponent<PlayerController>().IsGrabbingAnchor && !IsGrabbingAnchor && !IsGrounded() && rigidbody.velocity.magnitude < 2.0f 
+		if(OtherPlayer.GetComponent<PlayerController>().IsGrabbingAnchor && !IsGrabbingAnchor && !IsGrounded() && rigidbody.velocity.magnitude < 3.0f 
 			&& OtherPlayer.GetComponent<PlayerController>().transform.position.y > transform.position.y
 			&& Mathf.Abs(OtherPlayer.transform.position.x - transform.position.x) < 1)
 		{
 			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Dangling, true);
+			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Dangling, true, 0.5f);
 		}
 		
 		// Make the player dangle when his velocity is high and the other player is attached to an anchor point
-		if(OtherPlayer.GetComponent<PlayerController>().IsGrabbingAnchor && !IsGrabbingAnchor && !IsGrounded() && rigidbody.velocity.magnitude > 1.0f 
+		if(OtherPlayer.GetComponent<PlayerController>().IsGrabbingAnchor && !IsGrabbingAnchor && !IsGrounded() && rigidbody.velocity.magnitude > 3.0f 
 			&& OtherPlayer.GetComponent<PlayerController>().transform.position.y > transform.position.y)
 		{
 			// Play animation
-			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Swinging, true);
+			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.Swinging, true, 0.5f);
+		}
+		
+		// Make the character Jump
+		if(rigidbody.velocity.y > 5.0f)
+		{
+			// Play animation
+			GetComponentInChildren<PlayerAnimation>().PlayAnimation(CharacterAnimationType.JumpLoop, true, 0.5f);
 		}
 		
 		// Select player
@@ -161,7 +168,7 @@ public class PlayerController : MonoBehaviour
 		}
 		
 		if(rigidbody.velocity.magnitude > 0.1f)
-		Debug.Log("Velocity: " + rigidbody.velocity.magnitude);
+		Debug.Log("Velocity: " + rigidbody.velocity);
 	}
 	
 	public void LaunchCharacter(Vector3 startPostion, Vector3 endPostion)
