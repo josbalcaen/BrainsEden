@@ -13,10 +13,18 @@ public class Chain : MonoBehaviour {
 	public GameObject ChainLinkPrefab;
 	public float Radius;
 	private Mesh _Mesh;
-	// Use this for initialization
-	void Start () 
+	public float zOffset = 1f;
+	
+	public void Reset()
 	{
-		Physics.gravity = Vector3.down*20f;
+		if(ChainLinks != null)
+		{
+			foreach(GameObject obj in ChainLinks)
+			{
+				Destroy(obj);
+			}
+			
+		}
 		
 		//set the limit of the joint to this distance
 		SoftJointLimit limit = Player1Anchor.transform.parent.GetComponent<ConfigurableJoint>().linearLimit;
@@ -30,7 +38,7 @@ public class Chain : MonoBehaviour {
 		if(NumObjects %2 == 0)++NumObjects;
 		ChainLinks = new GameObject[NumObjects];
 		
-		float distStep = MaximumDistance / NumObjects;
+		float distStep = MaximumDistance / (NumObjects-1);
 		
 		
 		
@@ -61,9 +69,18 @@ public class Chain : MonoBehaviour {
 			
 			
 		}
+		
 		Player2Anchor.transform.parent.position = Player1Anchor.transform.position + Vector3.right*MaximumDistance;
 		Player2Anchor.GetComponent<CharacterJoint>().connectedBody = ChainLinks[NumObjects-1].rigidbody;
 		GenerateMesh();
+	}
+	// Use this for initialization
+	void Start () 
+	{
+		transform.position = new Vector3(0,0,-zOffset);
+		Physics.gravity = Vector3.down*20f;
+		
+		Reset();
 	}
 	
 //	void GenerateMesh2()
@@ -167,7 +184,7 @@ public class Chain : MonoBehaviour {
 				Vector3 offset = Quaternion.AngleAxis(angle,dir)*up*radius;
 				
 				vertices[j+numSides*i] = localPos + offset;
-				UVs[j+numSides*i] = new Vector2((float)j/(float)numSides,i);
+				UVs[j+numSides*i] = new Vector2((float)0.5f*j/(float)numSides,i);
 			}
 			
 		}
