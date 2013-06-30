@@ -27,8 +27,10 @@ public class PlayerController : MonoBehaviour
 	private bool _Dangling = false;
 	private float _DanglingTimer = 0f;
 	private Vector3 _prevVelocity;
-	
+	private bool _Swinging = false;
 	private PlayerAnimation _AnimPlayer;
+	
+	private bool _tension = false;
 
 	// Use this for initialization
 	void Start () 
@@ -59,10 +61,11 @@ public class PlayerController : MonoBehaviour
 		
 		bool grounded = IsGrounded();
 		// Check if the player is standing on the ground
-		if(grounded && IsGrabbingAnchor == false)
+		if(grounded && !IsGrabbingAnchor && !_tension)
 		{
 			// Play animation
 			_AnimPlayer.PlayAnimation(CharacterAnimationType.Standing, true,0.5f);
+			_Swinging = false;
 		}
 		
 		// Make the player dangle when his velocity is low and the other player is attached to an anchor point
@@ -90,39 +93,51 @@ public class PlayerController : MonoBehaviour
 			{
 				// Play animation
 				_AnimPlayer.PlayAnimation(CharacterAnimationType.JumpLoop, true, 0.5f);
-				
+				_Swinging = false;
 			}
 			else 
 			{
-				//Calculate change in velocity
-				Vector3 currentvel = rigidbody.velocity;
+//				//Calculate change in velocity
+//				Vector3 currentvel = rigidbody.velocity;
+//				
+//				if(_prevVelocity.y < 0 && Mathf.Abs(_prevVelocity.y / _prevVelocity.x)> 1)
+//				{
+////					if(_prevVelocity.magnitude - currentvel.magnitude > 5f)
+////					{
+////						_Dangling = true;
+////						_DanglingTimer = 2f;
+////						
+//////						_AnimPlayer.PlayAnimation(CharacterAnimationType.Dangling,true,0.5f);
+////					}
+//				}
+//				
+//				_prevVelocity = currentvel;
+//				
+//				if(_Dangling)
+//				{
+//					_DanglingTimer -= Time.deltaTime;
+//					if(_DanglingTimer <=0)
+//					{
+//						_Dangling = false;
+//						_AnimPlayer.PlayAnimation(CharacterAnimationType.Swinging,true,0.5f);
+//					}
+//				}
+//				else
+//				{
+				if(!_Swinging)
+					_AnimPlayer.PlayAnimation(CharacterAnimationType.JumpEnd,false);
 				
-				if(_prevVelocity.y < 0 && Mathf.Abs(_prevVelocity.y / _prevVelocity.x)> 1)
+				_Swinging = true;
+				if(rigidbody.velocity.x < 0)
 				{
-					if(_prevVelocity.magnitude - currentvel.magnitude > 5f)
-					{
-						_Dangling = true;
-						_DanglingTimer = 2f;
-						
-						_AnimPlayer.PlayAnimation(CharacterAnimationType.Dangling,true,0.5f);
-					}
-				}
-				
-				_prevVelocity = currentvel;
-				
-				if(_Dangling)
-				{
-					_DanglingTimer -= Time.deltaTime;
-					if(_DanglingTimer <=0)
-					{
-						_Dangling = false;
-						_AnimPlayer.PlayAnimation(CharacterAnimationType.Swinging,true,0.5f);
-					}
+					
+					_AnimPlayer.PlayAnimation(CharacterAnimationType.Swinging_Right,true,0.4f);
 				}
 				else
 				{
-					_AnimPlayer.PlayAnimation(CharacterAnimationType.Swinging,true,0.5f);
+					_AnimPlayer.PlayAnimation(CharacterAnimationType.Swinging_Left,true,0.4f);
 				}
+//				}
 			}
 		}
 		
@@ -146,8 +161,17 @@ public class PlayerController : MonoBehaviour
 					
 					if(_unitSelected)
 					{
-						// Play animation
-						_AnimPlayer.PlayAnimation(CharacterAnimationType.TensionJump, false);
+						_Swinging = false;
+						_tension = true;
+						if(grounded)
+						{
+							_AnimPlayer.PlayAnimation(CharacterAnimationType.GroundTension,false);
+						}
+						else
+						{
+							// Play animation
+							_AnimPlayer.PlayAnimation(CharacterAnimationType.TensionJump, false);
+						}
 						_startMousePos = Input.mousePosition;
 					}
 				}
@@ -157,6 +181,7 @@ public class PlayerController : MonoBehaviour
 		// Launch selected player
 		if(Input.GetButtonUp("Fire1") && _unitSelected)
 		{
+			
 			// Play animation
 			_AnimPlayer.PlayAnimation(CharacterAnimationType.JumpStart, false);
 			
@@ -165,7 +190,7 @@ public class PlayerController : MonoBehaviour
 			
 			_endMousePos = Input.mousePosition;
 			_unitSelected = false;
-			
+			_tension = false;
 			// Calculate swipe distance and multiply with modifier
 			Vector3 swipeDistance = _endMousePos - _startMousePos;
 			swipeDistance *= SwipeMultiplier;
@@ -207,6 +232,8 @@ public class PlayerController : MonoBehaviour
 			// Enable gravity when clicked on unit, disable lerp effect
 			_selectedUnit.rigidbody.useGravity = true;
 			IsGrabbingAnchor = false;
+			
+			
 		}
 		
 		// If the player is grabbing an anchor lerp his position
@@ -225,6 +252,7 @@ public class PlayerController : MonoBehaviour
 	public void LaunchCharacter(Vector3 startPostion, Vector3 endPostion)
 	{
 		// Play animation
+		_Swinging = false;
 		_AnimPlayer.PlayAnimation(CharacterAnimationType.JumpStart, false);
 		
 		// Set kinematic to false

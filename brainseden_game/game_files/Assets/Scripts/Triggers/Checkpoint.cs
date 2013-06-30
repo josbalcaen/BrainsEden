@@ -16,6 +16,7 @@ public class Checkpoint : MonoBehaviour {
 			GameObject manager = GameObject.FindGameObjectWithTag("Manager");
 			manager.GetComponent<Checkpoints>().CheckpointReached(Index);
 			manager.GetComponent<LevelManager>().SetLevelType(Type);
+			
 		}
 	}
 }

@@ -83,77 +83,7 @@ public class Chain : MonoBehaviour {
 		Reset();
 	}
 	
-//	void GenerateMesh2()
-//	{
-//		Vector3[] vertices = new Vector3[(numSides+1)*NumObjects];
-//		Vector2[] UVs = new Vector2[(numSides+1)*NumObjects];
-//		int[] indices = new int[(NumObjects-1)*numSides* 6];
-//		
-//		int NR_OF_STACKS = 5;
-//		for(int k = 0; k < NumObjects; ++k)
-//		{
-//			Quaternion rot = ChainLinks[k].transform.rotation;
-////			Quaternion rot = Quaternion.identity;
-////			Vector3 localPos = Vector3.right*20*i;
-//			
-//			Vector3 localPos = ChainLinks[k].transform.position;
-//			
-//			Vector3 dir = rot * Vector3.right;
-//			Vector3 up = Vector3.Cross(dir,new Vector3(0,0,1));
-//			
-//			for(int i =0; i < NR_OF_STACKS+1; ++i) //last of ring = first of ring
-//			{
-//				float angle = (float)Mathf.PI / i;
-//				
-//				
-//				D3DXVECTOR3 offset;
-//				D3DXMATRIX rotMat;
-//				
-//				D3DXMatrixRotationAxis(&rotMat,&dir,angle);
-//				D3DXVec3TransformCoord(&offset,&tangent,&rotMat);
-//				//Calculate circle around pos, around direction;
-//	
-//				m_VecVertices.push_back(VertexPosTex(midPos + offset,D3DXVECTOR2(k*(1.0f/NR_OF_RINGS),i*(1.0f/NR_OF_STACKS))));
-//			}
-//		}
-//		
-//		int NR_OF_RINGS = NumObjects;
-//		for(int k = 0; k < NR_OF_RINGS;++k)
-//		{
-//			
-//			D3DXVECTOR3 midPos = D3DXVECTOR3(static_cast<float>(k),0,0);
-//			D3DXVECTOR3 dir = D3DXVECTOR3(1,0,0);
-//			D3DXVECTOR3 tangent = D3DXVECTOR3(0,0,1);
-//			for(int i =0; i < NR_OF_STACKS+1; ++i) //last of ring = first of ring
-//			{
-//				float angle = (float)M_PI / i;
-//	
-//				D3DXVECTOR3 offset;
-//				D3DXMATRIX rotMat;
-//				
-//				D3DXMatrixRotationAxis(&rotMat,&dir,angle);
-//				D3DXVec3TransformCoord(&offset,&tangent,&rotMat);
-//				//Calculate circle around pos, around direction;
-//	
-//				m_VecVertices.push_back(VertexPosTex(midPos + offset,D3DXVECTOR2(k*(1.0f/NR_OF_RINGS),i*(1.0f/NR_OF_STACKS))));
-//			}
-//		}
-//		for(int i =0; i < NR_OF_RINGS-1; ++i)
-//		{
-//			for(int j= 0; j < NR_OF_STACKS; ++j)
-//			{
-//				int ringCount = NR_OF_STACKS+1; //index buffer: first of ring is same as last (double)
-//				m_VecIndices.push_back(j +i*ringCount);
-//				m_VecIndices.push_back(j+ringCount  + i*ringCount);
-//				m_VecIndices.push_back((j+1) +ringCount  +i*ringCount);
-//	
-//				m_VecIndices.push_back(j +i*ringCount);
-//				m_VecIndices.push_back((j+1)+ringCount +i*ringCount);
-//				m_VecIndices.push_back((j+1) +i*ringCount);
-//			}
-//		}
-//	}
-//	
+
 	void GenerateMesh()
 	{
 		float radius = Radius;
@@ -165,6 +95,8 @@ public class Chain : MonoBehaviour {
 		Vector2[] UVs = new Vector2[numSides*NumObjects];
 		int[] indices = new int[(NumObjects-1)*numSides* 6];
 		//iterate over objects
+		
+		
 		for(int i= 0; i < NumObjects; ++i)
 		{
 			Quaternion rot = ChainLinks[i].transform.rotation;
@@ -184,50 +116,53 @@ public class Chain : MonoBehaviour {
 				Vector3 offset = Quaternion.AngleAxis(angle,dir)*up*radius;
 				
 				vertices[j+numSides*i] = localPos + offset;
+				
 				UVs[j+numSides*i] = new Vector2((float)0.5f*j/(float)numSides,i);
 			}
 			
 		}
 		
+//		if(alsoIndices)
+//		{
 		//Indices
-		for(int i= 0; i < (NumObjects-1)*numSides* 6; ++i)
-		{
-			//triangle 1:
-			int quadNum = i/6; // = start vertex
-			int ringNum = quadNum/numSides;
-			int sideNum = quadNum%numSides;
-			switch(i%6)
-			{
-			case 3:
-			case 0:
-				
-				indices[i] = quadNum;
-				break;
-			case 1:
-				indices[i] = ringNum*numSides + (quadNum+1)%numSides;
-				break;
-			case 4:
-			case 2:
-				indices[i] = (ringNum+1)*numSides + (quadNum+1)%numSides;
-				break;
-				
 
-			case 5:
-				indices[i] = (ringNum+1)*numSides + quadNum%numSides;
-				break;
+			for(int i= 0; i < (NumObjects-1)*numSides* 6; ++i)
+			{
+				//triangle 1:
+				int quadNum = i/6; // = start vertex
+				int ringNum = quadNum/numSides;
+				int sideNum = quadNum%numSides;
+				switch(i%6)
+				{
+				case 3:
+				case 0:
+					
+					indices[i] = quadNum;
+					break;
+				case 1:
+					indices[i] = ringNum*numSides + (quadNum+1)%numSides;
+					break;
+				case 4:
+				case 2:
+					indices[i] = (ringNum+1)*numSides + (quadNum+1)%numSides;
+					break;
+				case 5:
+					indices[i] = (ringNum+1)*numSides + quadNum%numSides;
+					break;
+				}
 			}
-			
-			
-			
-		}
 		
 		
-		_Mesh = new Mesh();
-		_Mesh.vertices = vertices;
-		_Mesh.SetTriangles(indices,0);
+		
+		
+		GetComponent<MeshFilter>().mesh = _Mesh = new Mesh();
+		
+			
+		_Mesh.vertices = vertices;	
 		_Mesh.uv = UVs;
+		_Mesh.SetTriangles(indices,0);	
 		_Mesh.RecalculateNormals();
-		GetComponent<MeshFilter>().mesh = _Mesh;
+//		 = _Mesh;
 		
 	}
 	

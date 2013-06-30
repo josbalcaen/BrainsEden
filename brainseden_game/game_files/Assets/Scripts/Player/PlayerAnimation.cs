@@ -19,7 +19,10 @@ public enum CharacterAnimationType
 	JumpLoop,
 	JumpEnd,
 	Dangling,
-	Swinging
+	Swinging_Left,
+	Swinging_Right,
+	GroundTension,
+	HardLanding
 }
 
 public class AnimationEventArgs: EventArgs
@@ -93,9 +96,21 @@ public class PlayerAnimation : MonoBehaviour {
 				Loop = new String[]{"AegirDangling"}
 			});
 			//Swinging
-			_AnimDict.Add(CharacterAnimationType.Swinging,new Animations()
+			_AnimDict.Add(CharacterAnimationType.Swinging_Left,new Animations()
 			{
-				Loop = new String[]{"AegirSwinging"}
+				Loop = new String[]{"AegirSwingLeft"}
+			});
+			_AnimDict.Add(CharacterAnimationType.Swinging_Right,new Animations()
+			{
+				Loop = new String[]{"AegirSwingRight"}
+			});
+			_AnimDict.Add(CharacterAnimationType.GroundTension,new Animations()
+			{
+				Loop = new String[]{"AegirGroundTension"}
+			});
+			_AnimDict.Add(CharacterAnimationType.HardLanding,new Animations()
+			{
+				Loop = new string[]{"AegirJumpGround"}
 			});
 		}
 		_Initialized = true;
@@ -117,6 +132,8 @@ public class PlayerAnimation : MonoBehaviour {
 	
 	public void PlayAnimation(CharacterAnimationType type, bool loop = true, float crossfade = 0f)
 	{
+//		animation["AegirSwingRight"].speed = 0.5f;
+//		animation["AegirSwingLeft"].speed = 0.5f;
 		if(_CurrentAnimationType == type && _Loop)return;
 		_Loop = loop;
 		if(!_Initialized)

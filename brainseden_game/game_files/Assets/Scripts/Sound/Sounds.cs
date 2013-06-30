@@ -3,63 +3,96 @@ using System.Collections.Generic;
 
 public enum SoundEffectType
 {
-	SoundEffect1,
-	SoundEffect2
+    Snow,
+    Bump,
 }
+public enum VoiceEffectType
+{
+    Dangling,
+    Dangling_Idle,
+    Idle,
+    Falling,
+    Jump,
+    Tension
+}
+public enum CharacterType
+{
+    Aegir,
+    Oberon
+}
+
 public enum LevelType
 {
-	Morning,
-	Noon,
-	Evening,
-	Menu
+    Morning,
+    Noon,
+    Evening,
+    Menu
 }
-public class Sounds : MonoBehaviour {
-	
-	public float MusicVolume = 0.9f;
-	public float SoundEffectsVolume = 0.5f;
-	
-	
-	public AudioClip SoundEffect1;
-	public AudioClip SoundEffect2;
-	
-	
-	public AudioClip BackgroundNoon;
-	public AudioClip BackgroundMorning;
-	public AudioClip BackgroundEvening;
-	public AudioClip BackgroundMenu;
-	
-	public static AudioClip sBackgroundNoon;
-	public static AudioClip sBackgroundMorning;
-	public static AudioClip sBackgroundEvening;
-	public static AudioClip sBackgroundMenu;
-	
-	public static AudioSource _Audio1;
-	public static AudioSource _Audio2;
-	public static AudioSource _SoundEffectsSource;
-	
-	private static int CurrentAudio = 0;
-	private static float DesiredVolume1 = 1f;
-	private static float DesiredVolume2 = 0f;
-	private float currentVolume1 = 1f;
-	private float currentVolume2 = 0f;
-	
-//	private static int currentSoundEffectIndex;
-	
-	public static Dictionary<SoundEffectType,AudioClip[]> SoundEffectsDict = new Dictionary<SoundEffectType, AudioClip[]>();
-	
-	// Use this for initialization
-	void Start () 
+public class Sounds : MonoBehaviour
+{
+
+    public float MusicVolume = 0.9f;
+    public float SoundEffectsVolume = 0.5f;
+
+	public GameObject Aegir;
+	public GameObject Oberon;
+
+    public AudioClip BackgroundNoon;
+    public AudioClip BackgroundMorning;
+    public AudioClip BackgroundEvening;
+    public AudioClip BackgroundMenu;
+
+    public static AudioClip sBackgroundNoon;
+    public static AudioClip sBackgroundMorning;
+    public static AudioClip sBackgroundEvening;
+    public static AudioClip sBackgroundMenu;
+
+    public static AudioSource _Audio1;
+    public static AudioSource _Audio2;
+    public static AudioSource _VoiceAegir;
+    public static AudioSource _VoiceOberon;
+    public static AudioSource _SoundAegir;
+    public static AudioSource _SoundOberon;
+
+    private static int CurrentAudio = 0;
+    private static float DesiredVolume1 = 1f;
+    private static float DesiredVolume2 = 0f;
+    private float currentVolume1 = 1f;
+    private float currentVolume2 = 0f;
+
+    public List<AudioClip> Aegir_Dangling;
+    public List<AudioClip> Aegir_Dangling_Idle;
+    public List<AudioClip> Aegir_Idle;
+    public List<AudioClip> Aegir_Falling;
+    public List<AudioClip> Aegir_Jump;
+    public List<AudioClip> Aegir_Tension;
+
+    public List<AudioClip> Oberon_Dangling;
+    public List<AudioClip> Oberon_Dangling_Idle;
+    public List<AudioClip> Oberon_Idle;
+    public List<AudioClip> Oberon_Falling;
+    public List<AudioClip> Oberon_Jump;
+    public List<AudioClip> Oberon_Tension;
+
+    public List<AudioClip> BumpEffects;
+    //	public List<AudioClip> SnowEffects;
+
+    //	private static int currentSoundEffectIndex;
+    public static Dictionary<SoundEffectType, List<AudioClip>> SoundEffectsDict = new Dictionary<SoundEffectType, List<AudioClip>>();
+    public static Dictionary<VoiceEffectType, List<AudioClip>> VoicesAegir = new Dictionary<VoiceEffectType, List<AudioClip>>();
+    public static Dictionary<VoiceEffectType, List<AudioClip>> VoicesOberon = new Dictionary<VoiceEffectType, List<AudioClip>>();
+    // Use this for initialization
+
+    void Start() 
 	{
 		AudioSource[] sources = Camera.mainCamera.GetComponents<AudioSource>();
+		
+		
 		_Audio1 = sources[0];
 		_Audio2 = sources[1];
 		_Audio1.loop = true;
 		_Audio2.loop = true;
 		
-		_SoundEffectsSource = sources[2];
-		_SoundEffectsSource.loop = false;
-		_SoundEffectsSource.volume = SoundEffectsVolume;
-
 		CurrentAudio = 0;
 		
 		_Audio1.volume = currentVolume1;
@@ -71,70 +104,122 @@ public class Sounds : MonoBehaviour {
 		sBackgroundMenu = BackgroundMenu;
 		
 		SoundEffectsDict.Clear();
-		SoundEffectsDict.Add(SoundEffectType.SoundEffect1,new AudioClip[]{SoundEffect1});
-		SoundEffectsDict.Add(SoundEffectType.SoundEffect2,new AudioClip[]{SoundEffect2});
-	
+		SoundEffectsDict.Add(SoundEffectType.Bump,BumpEffects);
+//		SoundEffectsDict.Add(SoundEffectType.Snow,);
+		
+		VoicesAegir.Clear();
+	    VoicesAegir.Add(VoiceEffectType.Dangling,		    Aegir_Dangling	);
+	    VoicesAegir.Add(VoiceEffectType.Dangling_Idle,		Aegir_Dangling_Idle	);
+	    VoicesAegir.Add(VoiceEffectType.Idle,		        Aegir_Idle);
+	    VoicesAegir.Add(VoiceEffectType.Falling,		    Aegir_Falling	);
+	    VoicesAegir.Add(VoiceEffectType.Jump,		        Aegir_Jump	);
+    	VoicesAegir.Add(VoiceEffectType.Tension,		    Aegir_Tension	);
+
+		VoicesOberon.Clear();
+        VoicesOberon.Add(VoiceEffectType.Dangling,		    Oberon_Dangling	);
+	    VoicesOberon.Add(VoiceEffectType.Dangling_Idle,		Oberon_Dangling_Idle	);
+	    VoicesOberon.Add(VoiceEffectType.Idle,		        Oberon_Idle);
+	    VoicesOberon.Add(VoiceEffectType.Falling,		    Oberon_Falling	);
+	    VoicesOberon.Add(VoiceEffectType.Jump,		        Oberon_Jump	);
+	    VoicesOberon.Add(VoiceEffectType.Tension,		    Oberon_Tension	);
+
+		
+		
 		PlayLevelBackground(LevelType.Morning);
 		
 	}
-	
 
-	public static void PlaySoundEffect(SoundEffectType type)
-	{
-		AudioClip[] clips = SoundEffectsDict[type];
-		int rand = Random.Range(0,clips.Length);
+    public static void PlayVoiceEffect(VoiceEffectType voicetype, CharacterType chartype)
+    {
+        List<AudioClip> clips = null;
+		AudioSource source = null;
+        switch (chartype)
+        {
+            case CharacterType.Aegir:
+                clips = VoicesAegir[voicetype];
+				source = _VoiceAegir;
+                break;
+            case CharacterType.Oberon:
+                clips = VoicesOberon[voicetype];
+				source = _VoiceOberon;
+                break;
+			
+        }
+        int rand = Random.Range(0, clips.Count);
+
 		
-		_SoundEffectsSource.PlayOneShot(clips[rand]);
-	}
-	public static void PlayLevelBackground(LevelType level)
-	{
-		++CurrentAudio;
-		CurrentAudio%=2;
-		AudioSource nextAudio; 
+        source.PlayOneShot(clips[rand]);
+    }
+
+    public static void PlaySoundEffect(SoundEffectType type, CharacterType charType)
+    {
+		AudioSource source = null;
+        switch (charType)
+        {
+            case CharacterType.Aegir:
+				source = _VoiceAegir;
+                break;
+            case CharacterType.Oberon:
+				source = _VoiceOberon;
+                break;
+			
+        }
 		
-		if(CurrentAudio == 0)
-		{
-			nextAudio = _Audio1;
-			DesiredVolume1 = 0.75f;
-			DesiredVolume2 = 0f;
-		}
-		else
-		{
-			nextAudio = _Audio2;
-			DesiredVolume1 = 0f;
-			DesiredVolume2 = 0.75f;
-		}
-		
-		if(nextAudio == null) return;
-		switch(level)
-		{
-		case LevelType.Morning:
-			nextAudio.clip = sBackgroundMorning;
-			break;
-		case LevelType.Noon:
-			nextAudio.clip = sBackgroundNoon;
-			break;
-		case LevelType.Evening:
-			nextAudio.clip = sBackgroundEvening;
-			break;
-		case LevelType.Menu:
-			nextAudio.clip = sBackgroundMenu;
-			break;
-		}
-		nextAudio.Play();
-		
-	}
-	// Update is called once per frame
-	void Update () 
-	{
-	
-		
-		float lerpVal = Mathf.Clamp01(0.05f*Time.deltaTime*60f);
-		
-		currentVolume1 = Mathf.Lerp(currentVolume1,DesiredVolume1,lerpVal);
-		currentVolume2 = Mathf.Lerp(currentVolume2,DesiredVolume2,lerpVal);
-		
-		_Audio1.volume = currentVolume1;
-		_Audio2.volume = currentVolume2;
-	}
+        List<AudioClip> clips = SoundEffectsDict[type];
+        int rand = Random.Range(0, clips.Count);
+
+        source.PlayOneShot(clips[rand]);
+    }
+    public static void PlayLevelBackground(LevelType level)
+    {
+        ++CurrentAudio;
+        CurrentAudio %= 2;
+        AudioSource nextAudio;
+
+        if (CurrentAudio == 0)
+        {
+            nextAudio = _Audio1;
+            DesiredVolume1 = 0.75f;
+            DesiredVolume2 = 0f;
+        }
+        else
+        {
+            nextAudio = _Audio2;
+            DesiredVolume1 = 0f;
+            DesiredVolume2 = 0.75f;
+        }
+
+        if (nextAudio == null) return;
+        switch (level)
+        {
+            case LevelType.Morning:
+                nextAudio.clip = sBackgroundMorning;
+                break;
+            case LevelType.Noon:
+                nextAudio.clip = sBackgroundNoon;
+                break;
+            case LevelType.Evening:
+                nextAudio.clip = sBackgroundEvening;
+                break;
+            case LevelType.Menu:
+                nextAudio.clip = sBackgroundMenu;
+                break;
+        }
+        nextAudio.Play();
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+
+        float lerpVal = Mathf.Clamp01(0.05f * Time.deltaTime * 60f);
+
+        currentVolume1 = Mathf.Lerp(currentVolume1, DesiredVolume1, lerpVal);
+        currentVolume2 = Mathf.Lerp(currentVolume2, DesiredVolume2, lerpVal);
+
+        _Audio1.volume = currentVolume1;
+        _Audio2.volume = currentVolume2;
+    }
 }
