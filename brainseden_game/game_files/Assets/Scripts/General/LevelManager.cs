@@ -5,6 +5,8 @@ public class LevelManager : MonoBehaviour {
 	
 	private LevelType _currentLevelType;
 
+	public GameObject Player1;
+	public GameObject Player2;
 	
 	// Use this for initialization
 	void Start () {
@@ -20,6 +22,12 @@ public class LevelManager : MonoBehaviour {
 			Sounds.PlayLevelBackground(type);
 		}
 	}
+	
+	public void EndLevelReached()
+	{
+		
+	}
+	
 	// Update is called once per frame
 	void Update () {
 	
